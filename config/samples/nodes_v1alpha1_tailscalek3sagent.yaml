@@ -3,7 +3,13 @@ kind: TailscaleK3sAgent
 metadata:
   labels:
     app.kubernetes.io/name: tailscale-k3s-operator
-    app.kubernetes.io/managed-by: kustomize
   name: tailscalek3sagent-sample
 spec:
-  # TODO(user): Add fields here
+  k3sServerURL: "https://k3s-server:6443"
+  k3sToken: "your-k3s-token"
+  clientId: "kUGmP7kHcL11CNTRL"
+  clientSecret: "your-client-secret"
+  tailscaleOrgName: "tskey-client-kUGmP7kHcL11CNTRL-QCnxwZoKTD57gfBYaerBD55F3VZitukVe"
+  tags:
+    - "tag:k3s"
+    - "tag:production"

@@ -6,42 +6,42 @@ import (
 
 // TailscaleK3sAgentSpec defines the desired state of TailscaleK3sAgent
 type TailscaleK3sAgentSpec struct {
-    // TailscaleID is the unique identifier from Tailscale
-    TailscaleID string `json:"tailscaleId"`
+	// Tags are the Tailscale tags assigned to this node
+	Tags []string `json:"tags"`
 
-    // Hostname is the device hostname in Tailscale
-    Hostname string `json:"hostname"`
+	// K3sServerURL is the URL of the K3s server to join
+	K3sServerURL string `json:"k3sServerURL"`
 
-    // IPAddress is the Tailscale IP address
-    IPAddress string `json:"ipAddress"`
+	// K3sToken is the token used for K3s agent registration
+	K3sToken string `json:"k3sToken,omitempty"`
 
-    // Tags are the Tailscale tags assigned to this node
-    Tags []string `json:"tags"`
+	// ClientID is the OAuth client ID from Tailscale
+	ClientID string `json:"clientId"`
 
-    // K3sServerURL is the URL of the K3s server to join
-    K3sServerURL string `json:"k3sServerURL"`
+	// ClientSecret is the OAuth client secret from Tailscale
+	ClientSecret string `json:"clientSecret"`
 
-    // K3sToken is the token used for K3s agent registration
-    K3sToken string `json:"k3sToken,omitempty"`
+	// TailscaleOrgName is your Tailscale organization name
+	TailscaleOrgName string `json:"tailscaleOrgName"`
 }
 
 // TailscaleK3sAgentStatus defines the observed state of TailscaleK3sAgent
 type TailscaleK3sAgentStatus struct {
-    // Phase represents the current state of the agent
-    // +kubebuilder:validation:Enum=Pending;Provisioning;Ready;Failed
-    Phase string `json:"phase"`
+	// Phase represents the current state of the agent
+	// +kubebuilder:validation:Enum=Pending;Provisioning;Ready;Failed
+	Phase string `json:"phase"`
 
-    // LastProvisioned is the timestamp of the last provisioning attempt
-    LastProvisioned *metav1.Time `json:"lastProvisioned,omitempty"`
+	// LastProvisioned is the timestamp of the last provisioning attempt
+	LastProvisioned *metav1.Time `json:"lastProvisioned,omitempty"`
 
-    // LastSeen is when the agent was last seen in Tailscale
-    LastSeen *metav1.Time `json:"lastSeen,omitempty"`
+	// LastSeen is when the agent was last seen in Tailscale
+	LastSeen *metav1.Time `json:"lastSeen,omitempty"`
 
-    // K3sVersion is the version of K3s running on the agent
-    K3sVersion string `json:"k3sVersion,omitempty"`
+	// K3sVersion is the version of K3s running on the agent
+	K3sVersion string `json:"k3sVersion,omitempty"`
 
-    // Error message if provisioning failed
-    Error string `json:"error,omitempty"`
+	// Error message if provisioning failed
+	Error string `json:"error,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -49,7 +49,7 @@ type TailscaleK3sAgentStatus struct {
 //+kubebuilder:printcolumn:name="Phase",type=string,JSONPath=`.status.phase`
 //+kubebuilder:printcolumn:name="Hostname",type=string,JSONPath=`.spec.hostname`
 //+kubebuilder:printcolumn:name="IP",type=string,JSONPath=`.spec.ipAddress`
-//+kubebuilder:printcolumn:name="LastSeen",type=timestamp,JSONPath=`.status.lastSeen`
+//+kubebuilder:printcolumn:name="LastSeen",type="string",JSONPath=`.status.lastSeen`
 //+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // TailscaleK3sAgent is the Schema for the tailscalek3sagents API

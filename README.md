@@ -24,3 +24,7 @@ A Kubernetes operator that automatically discovers and configures Tailscale node
 - Tailscale account and API access
 - K3s server running and accessible
 - kubectl installed and configured
+
+## Development
+
+- [Install Kind](https://kind.sigs.k8s.io/#installation-and-usage)
