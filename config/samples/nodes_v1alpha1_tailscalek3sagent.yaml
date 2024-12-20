@@ -1,0 +1,9 @@
+apiVersion: nodes.visionbyscope.com/v1alpha1
+kind: TailscaleK3sAgent
+metadata:
+  labels:
+    app.kubernetes.io/name: tailscale-k3s-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: tailscalek3sagent-sample
+spec:
+  # TODO(user): Add fields here
