@@ -10,9 +10,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	nodesv1alpha1 "github.com/yourusername/tailscale-k3s-operator/api/v1alpha1"
-	"github.com/yourusername/tailscale-k3s-operator/internal/provisioner"
-	"github.com/yourusername/tailscale-k3s-operator/internal/tailscale"
+	nodesv1alpha1 "github.com/stuart-haas/tailscale-k3s-operator/api/v1alpha1"
+	"github.com/stuart-haas/tailscale-k3s-operator/internal/provisioner"
+	"github.com/stuart-haas/tailscale-k3s-operator/internal/tailscale"
 )
 
 // TailscaleK3sAgentReconciler reconciles a TailscaleK3sAgent object

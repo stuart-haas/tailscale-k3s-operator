@@ -43,3 +43,33 @@ type TailscaleK3sAgentStatus struct {
     // Error message if provisioning failed
     Error string `json:"error,omitempty"`
 }
+
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+//+kubebuilder:printcolumn:name="Phase",type=string,JSONPath=`.status.phase`
+//+kubebuilder:printcolumn:name="Hostname",type=string,JSONPath=`.spec.hostname`
+//+kubebuilder:printcolumn:name="IP",type=string,JSONPath=`.spec.ipAddress`
+//+kubebuilder:printcolumn:name="LastSeen",type=timestamp,JSONPath=`.status.lastSeen`
+//+kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+
+// TailscaleK3sAgent is the Schema for the tailscalek3sagents API
+type TailscaleK3sAgent struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   TailscaleK3sAgentSpec   `json:"spec,omitempty"`
+	Status TailscaleK3sAgentStatus `json:"status,omitempty"`
+}
+
+//+kubebuilder:object:root=true
+
+// TailscaleK3sAgentList contains a list of TailscaleK3sAgent
+type TailscaleK3sAgentList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []TailscaleK3sAgent `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(&TailscaleK3sAgent{}, &TailscaleK3sAgentList{})
+}
