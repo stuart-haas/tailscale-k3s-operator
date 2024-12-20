@@ -7,15 +7,19 @@ import (
 	"net/http"
 	"time"
 
+	"golang.org/x/oauth2/clientcredentials"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-// Client represents a Tailscale API client
+type ClientConfig struct {
+	ClientId     string
+	ClientSecret string
+	OrgName      string
+}
+
 type Client struct {
-	httpClient   *http.Client
-	baseURL      string
-	clientID     string
-	clientSecret string
+	baseURL string
+	config  ClientConfig
 }
 
 // Device represents a Tailscale device
@@ -28,40 +32,35 @@ type Device struct {
 }
 
 // NewClient creates a new Tailscale API client
-func NewClient(clientID, clientSecret string) *Client {
+func NewClient(config ClientConfig) *Client {
 	log := log.FromContext(context.Background())
 	log.Info("Creating Tailscale API client")
 	return &Client{
-		httpClient: &http.Client{
-			Timeout: time.Second * 10,
-		},
-		baseURL:      "https://api.tailscale.com/api/v2",
-		clientID:     clientID,
-		clientSecret: clientSecret,
+		baseURL: "https://api.tailscale.com/api/v2",
+		config:  config,
 	}
+}
+
+func (c *Client) getHTTPClient() *http.Client {
+	oauthConfig := clientcredentials.Config{
+		ClientID:     c.config.ClientId,
+		ClientSecret: c.config.ClientSecret,
+		TokenURL:     fmt.Sprintf("%s/oauth/token", c.baseURL),
+	}
+	client := oauthConfig.Client(context.Background())
+	return client
 }
 
 // ListDevices returns all devices in the Tailscale network
 func (c *Client) ListDevices(ctx context.Context) ([]Device, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/devices", c.baseURL), nil)
+	httpClient := c.getHTTPClient()
+	res, err := httpClient.Get(fmt.Sprintf("%s/tailnet/%s/devices", c.baseURL, c.config.OrgName))
 	if err != nil {
-		return nil, fmt.Errorf("creating request: %w", err)
-	}
-
-	req.SetBasicAuth(c.clientID, c.clientSecret)
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("executing request: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		return nil, fmt.Errorf("getting devices: %v", err)
 	}
 
 	var devices []Device
-	if err := json.NewDecoder(resp.Body).Decode(&devices); err != nil {
+	if err := json.NewDecoder(res.Body).Decode(&devices); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
 

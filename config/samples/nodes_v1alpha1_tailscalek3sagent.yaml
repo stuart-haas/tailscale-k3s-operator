@@ -7,9 +7,9 @@ metadata:
 spec:
   k3sServerURL: "https://k3s-server:6443"
   k3sToken: "your-k3s-token"
-  clientId: "kUGmP7kHcL11CNTRL"
-  clientSecret: "your-client-secret"
-  tailscaleOrgName: "tskey-client-kUGmP7kHcL11CNTRL-QCnxwZoKTD57gfBYaerBD55F3VZitukVe"
+  clientId: "${CLIENT_ID}"
+  clientSecret: "${CLIENT_SECRET}"
+  tailscaleOrgName: "visionbyscope.com"
   tags:
     - "tag:k3s"
     - "tag:production"

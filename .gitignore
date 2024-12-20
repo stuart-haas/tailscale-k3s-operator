@@ -23,3 +23,6 @@ go.work.sum
 
 # env file
 .env
+
+# tmp files
+nodes_v1alpha1_tailscalek3sagent.yaml.tmp

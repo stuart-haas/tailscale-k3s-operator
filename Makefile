@@ -1,3 +1,5 @@
+include .env
+
 # Image URL to use all building/pushing image targets
 IMG ?= controller:latest
 # ENVTEST_K8S_VERSION refers to the version of kubebuilder assets to be downloaded by envtest binary.
@@ -210,3 +212,11 @@ mv $(1) $(1)-$(3) ;\
 } ;\
 ln -sf $(1)-$(3) $(1)
 endef
+
+.PHONY: manifest-apply
+manifest-apply:
+	@export CLIENT_ID=$(CLIENT_ID) > /dev/null; \
+	export CLIENT_SECRET=$(CLIENT_SECRET) > /dev/null; \
+	cat config/samples/nodes_v1alpha1_tailscalek3sagent.yaml | envsubst > config/samples/nodes_v1alpha1_tailscalek3sagent.yaml.tmp; \
+	kubectl delete -f config/samples/nodes_v1alpha1_tailscalek3sagent.yaml.tmp --ignore-not-found; \
+	kubectl apply -f config/samples/nodes_v1alpha1_tailscalek3sagent.yaml.tmp

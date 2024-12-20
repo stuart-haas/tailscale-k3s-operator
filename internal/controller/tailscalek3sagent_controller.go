@@ -34,6 +34,20 @@ func (r *TailscaleK3sAgentReconciler) Reconcile(ctx context.Context, req ctrl.Re
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 
+	tailscaleClient := tailscale.NewClient(tailscale.ClientConfig{
+		ClientId:     agent.Spec.ClientID,
+		ClientSecret: agent.Spec.ClientSecret,
+		OrgName:      agent.Spec.TailscaleOrgName,
+	})
+	r.TailscaleClient = tailscaleClient
+
+	devices, err := r.TailscaleClient.ListDevices(ctx)
+	if err != nil {
+		log.Error(err, "failed to list Tailscale devices")
+		return ctrl.Result{RequeueAfter: time.Minute}, nil
+	}
+	log.Info("devices", "devices", devices)
+
 	// Get TailscaleID from annotation
 	tailscaleID, exists := agent.Annotations[TailscaleIDAnnotation]
 	if !exists {
